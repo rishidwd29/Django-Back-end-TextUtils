@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>template is working</title>
+    <title>TextAnalyzer</title>
 </head>
 <body>
     <h1>Welcome to the Text Analizer . Enter your text below</h1>
-    <form action='/removepunch' method='get'>
+    <form action='/analyze' method='get'>
         <textarea name= 'text' style='width : 930px; height: 153px; '></textarea>
-        <br><button type='submit'>Analize Text</button>
+        <br>
+        <input type="checkbox" name="removepunc"> Remove punctuations<br>
+        <input type="checkbox" name="fullcaps">UPPERCASE<br>
+        <input type="checkbox" name="newlineremover">New Line Remover<br>
+        <input type="checkbox" name="exrtaspaceremover">Extraspace Remover<br>
+        <input type="checkbox" name="charcounter">Character Counter<br>
+        <button type='submit'>Analize Text</button>
     </form>
 </body>
 </html>
