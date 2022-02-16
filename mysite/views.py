@@ -23,14 +23,15 @@ def five_web(request):
        
 def  analyze(request):
        #Get Text from User
-       djtext=request.GET.get('text', 'Default')
+       djtext=request.POST.get('text', 'Default')
+       print(djtext)
        
        # Check checkbox values
-       removepunc = request.GET.get('removepunc', 'off')
-       fullcaps = request.GET.get('fullcaps', 'off')
-       newlineremover = request.GET.get('newlineremover', 'off')
-       exrtaspaceremover = request.GET.get('exrtaspaceremover','off')
-       charcounter = request.GET.get('charcounter','off')
+       removepunc = request.POST.get('removepunc', 'off')
+       fullcaps = request.POST.get('fullcaps', 'off')
+       newlineremover = request.POST.get('newlineremover', 'off')
+       exrtaspaceremover = request.POST.get('exrtaspaceremover','off')
+       # charcounter = request.POST.get('charcounter','off')
        
        #routing according to checkbox values
        if removepunc== "on":
@@ -40,15 +41,24 @@ def  analyze(request):
                      if char not in punctuations:
                             analyzed = analyzed +char
               params = {'purpose':'remove punctuations','analyzed_text':analyzed}
-              return render(request, 'analyze.html',params)
-       elif(newlineremover=='on'):
+              djtext= analyzed
+              # return render(request, 'analyze.html',params)
+       if(fullcaps=='on'):
               analyzed=""
               for char in djtext:
-                     if char !="\n":
+                     analyzed = analyzed + char.upper()       
+              params = {'purpose':"Change to upper case",'analyzed_text':analyzed}
+              djtext=analyzed
+              # return render(request, 'analyze.html',params)
+       if(newlineremover=='on'):
+              analyzed=" "
+              for char in djtext:
+                     if char !="\n" and char!='\r':
                             analyzed = analyzed + char
-              params={'purpose':'Remved Newlines', 'analyzed_text':analyzed}
-              return render(request, 'analyze.html', params)
-       elif(exrtaspaceremover=='on'):
+              params={'purpose':'Removed Newlines', 'analyzed_text':analyzed}
+              djtext=analyzed
+              # return render(request, 'analyze.html', params)
+       if(exrtaspaceremover=='on'):
               analyzed=""
               for index, char in enumerate(djtext):
                      if djtext[index]==" " and djtext[index+1]==" ":
@@ -56,25 +66,23 @@ def  analyze(request):
                      else:
                             analyzed = analyzed + char
               params={'purpose':'Remove Extra Spaces', 'analyzed_text':analyzed}
-              return render(request, 'analyze.html',params)
-       elif charcounter=="on":
-              analyzed=""
-              for i in djtext:
-                     i=i+1
+              djtext = analyzed
+              # return render(request, 'analyze.html',params)
+       # if charcounter=="on":
+       #        analyzed=""
+       #        for i in djtext:
+       #               i=i+1
               
-              analyzed =i
-              params = {'purpose':'Count the Text ', 'analyzed_text':analyzed}
-              return render (request, 'analyze.html',params)              
-                            
-       elif(fullcaps=='on'):
-              analyzed=""
-              for char in djtext:
-                     analyzed = analyzed + char.upper()       
-              params = {'purpose':"Capitalize",'analyzed_text':analyzed}
-              return render(request, 'analyze.html',params)
+       #        analyzed =i
+       #        params = {'purpose':'Count the Text ', 'analyzed_text':analyzed}
+       #        djtext= analyzed
+       #        # return render (equest, 'analyze.html',params)    
+       if  (removepunc != "on"  and newlineremover!="on" and fullcaps!="on" and exrtaspaceremover!="on"):
+              return HttpResponse("Please Go back and use one of the switches to enable text processing")
        else:
-              return HttpResponse("error")  
-       
+              return render (request, 'analyze.html',params)
+                            
+         
        
 def capfirst(request):
        return HttpResponse('''<a href ="/">Back</a><br> Capitalize first''')
